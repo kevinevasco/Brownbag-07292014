@@ -1,0 +1,57 @@
+<apex:component layout="none" access="global">
+ 
+<apex:attribute access="global" name="statusMessage" type="string" description="The status message to be displayed on the modal popup."/>
+
+	<apex:variable var="statusDisplay" value="{!IF(ISBLANK(statusMessage), JSENCODE($Label.STATUS_MESSAGE), JSENCODE(statusMessage))}" />
+	<apex:variable var="loadingImage" value="{!$Resource.zqu__loading}" />
+
+	<apex:includeScript value="{!$Resource.zqu__jquery_1_9_1}" />
+	<apex:includeScript value="{!$Resource.zqu__simplemodal}" />
+
+	<style>
+#basic-modal-content {
+	display: none;
+	height: 350px;
+}
+
+h1 {
+  color: black;
+}
+
+/* Overlay */
+#simplemodal-overlay {
+	background-color: #000;
+}
+
+/* Container */
+#simplemodal-container {
+	height: 100px;
+	width: 300px;
+	color: #bbb;
+	/*        background-color:#333;  */
+	background-color: rgb(247, 242, 239);;
+	/*        border:4px solid #444;  */
+	padding: 12px;
+	align: center;
+	text-align: center;
+}
+
+#simplemodal-container .simplemodal-data {
+	padding: 8px;
+}
+</style>
+
+  <!-- ensure that the loading image is preloaded, since in some cases the modal will render without the image unless it is preloaded -->
+  <span style="display: none;"><apex:image value="{!loadingImage}" /></span>
+	<script>
+        function displayStatusModal() {
+          var msg = '{!statusDisplay}';
+          jQuery.modal("<div id='basic-model-content'><img id='loading' type='image' src='{!loadingImage}' /><div><br/><h1>" + msg + "</h1></div></div>");
+        }
+        
+        function closeStatusModal() {
+          jQuery.modal.close(); 
+        }
+  </script>
+
+</apex:component>

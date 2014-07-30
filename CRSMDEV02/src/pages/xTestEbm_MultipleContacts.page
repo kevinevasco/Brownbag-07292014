@@ -1,0 +1,47 @@
+<apex:page controller="xTestEbm_MultipleContacts">
+ <apex:form >
+ <apex:pageBlock title="Specific Dates for Training Plan">
+ <apex:pageBlockSection title="Specific Dates for Training Plan">
+    <!-- <apex:pageblockSectionItem >
+         <apex:outputLabel value="Training Plan" for="tp"></apex:outputLabel>
+         <apex:inputText id="tp" value="{!wrappers.acc.Training_Plan__c}"/>
+     </apex:pageblockSectionItem> -->
+     <apex:pageblockSectionItem >
+         <apex:outputLabel value="Number of Rows" for="noofdays"></apex:outputLabel>
+         <apex:inputText id="noofdays" value="{!noOfDays}"/>
+     </apex:pageblockSectionItem>
+     <apex:pageBlockSectionItem >
+         <apex:commandButton value="Add Rows" action="{!addRows}" rerender="wtable">
+             <apex:param name="addCount" value="{!noOfDays}" assignTo="{!addCount}"/>
+         </apex:commandButton>
+     </apex:pageBlockSectionItem>
+ </apex:pageBlockSection>
+   
+      <apex:pageBlockTable value="{!wrappers}" var="wrapper" id="wtable">
+         <apex:column headerValue="Ident">
+            <apex:outputText value="{!wrapper.ident}"/>
+         </apex:column>
+         <apex:column headerValue="Last Name">
+            <apex:inputField value="{!wrapper.acc.LastName}"/>
+         </apex:column>
+         <apex:column headerValue="Email">
+            <apex:inputField value="{!wrapper.acc.Email}"/>
+         </apex:column>
+         <apex:column headerValue="Mobile">
+            <apex:inputField value="{!wrapper.acc.MobilePhone}"/>
+         </apex:column>
+         
+         <apex:column headerValue="Action">
+            <apex:commandButton value="Delete" action="{!delWrapper}" rerender="wtable">
+               <apex:param name="toDelIdent" value="{!wrapper.ident}" assignTo="{!toDelIdent}"/>
+            </apex:commandButton>
+         </apex:column>
+      </apex:pageBlockTable>
+    <!--  <apex:commandButton value="Add Row" action="{!addRows}" rerender="wtable">
+         <apex:param name="addCount" value="1" assignTo="{!addCount}"/>
+      </apex:commandButton> -->
+      
+      <apex:commandButton value="Save" action="{!save}"/>
+   </apex:pageBlock>
+ </apex:form>
+</apex:page>

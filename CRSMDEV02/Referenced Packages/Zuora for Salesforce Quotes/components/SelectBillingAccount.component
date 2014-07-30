@@ -1,0 +1,228 @@
+<apex:component allowDML="true" selfClosing="true" access="global"
+	controller="zqu.SelectBillingAccountController">
+	<apex:attribute name="title" access="global" type="String"
+		description="Page title that will be displayed in the component" />
+	<apex:attribute name="subTitle" access="global" type="String"
+		description="Sub title that will be displayed in the component" />
+	<apex:attribute name="opportunityId" assignTo="{!oppId}"
+		required="true" access="global" type="ID" description="Opportunity Id" />
+	<apex:attribute name="newQuotePage" assignTo="{!newQuotePageUrl}"
+		type="String" access="global"
+		description="It will redirect to this page if the continue button is clicked and new subscription is selected" />
+	<apex:attribute name="amendQuotePage" assignTo="{!amendQuotePageUrl}"
+		type="String" access="global"
+		description="It will redirect to this page if the continue button is clicked and amend subscription is selected" />
+	<apex:attribute name="renewalQuotePage"
+		assignTo="{!renewalQuotePageUrl}" type="String" access="global"
+		description="It will redirect to this page if the continue button is clicked and amend subscription is selected" />
+	<apex:attribute name="cancelQuotePage" assignTo="{!cancelQuotePageUrl}"
+		type="String" access="global"
+		description="It will redirect to this page if the cancel button is clicked" />
+
+	<!-- COM-4888 -->
+	<apex:attribute name="goBackPage" assignTo="{!backPageUrl}"
+		type="String" access="global"
+		description="The component will redirect to this page if the back button is clicked" />
+	<apex:attribute name="renderBackButton" assignTo="{!backButtonRendered}"
+		type="Boolean" access="global" 
+		description="Boolean value indicating whether or not to render the back button of the component" />
+	<apex:attribute name="disableBackButton" assignTo="{!backButtonDisabled}"
+		type="Boolean" access="global"
+		description="Boolean value indicating whether or not to disable the back button of the component" />
+		
+	<apex:attribute name="backButtonLabel" assignTo="{!backButtonText}"
+		type="String" access="global"
+		description="Text value rendered in the back button" />
+	<apex:attribute name="nextButtonLabel" assignTo="{!nextButtonText}"
+		type="String" access="global"
+		description="Text value rendered in the back button" />
+  <apex:includeScript value="{!URLFOR($Resource.zqu__ImagesAndJavascriptZip, '/js/XmlSerializerForIE-compressed.js')}"/>
+<style>
+.tertiaryPalette {
+  background-color: #E7F3DD !important;
+}
+
+.apexp .bPageBlock.apexDefaultPageBlock .pbBody {
+  margin-left: 0px; 
+  margin-top: 0px;
+  margin-right:0px;
+} 
+
+.bPageBlock .pbBody .pbSubheader {
+  padding: 4px 3px 4px 8px !important;
+}
+
+.apexp .bPageBlock.apexDefaultPageBlock .pbBody .pbSubheader {
+  border-top: 0 none;
+  color: black;
+}  
+
+.bPageBlock .pbTitle {
+  width: 45%; !important; 
+} 
+
+.customRenderedFieldPanel .requiredInput {
+  float: left;
+}
+</style>
+
+	<apex:sectionHeader rendered="{!NOT(ISBLANK(title))}" title="{!title}"
+		subtitle="{!subTitle}" id="quoteTitle" />
+	<c:StatusModal />
+	<c:ListComponentCSS />
+	<apex:form >
+		<apex:pageBlock >
+			<apex:outputPanel id="msgPanel">
+				<c:Notification options="{!notificationOptions}" id="notification" />
+			</apex:outputPanel>
+			
+			<!-- ActionFunctions for popup notification buttons -->
+			<apex:actionFunction name="cancel" action="{!cancel}" rerender="msgPanel" immediate="true" oncomplete="closeStatusModal();" />
+			<apex:actionFunction name="goBack" action="{!goBack}" rerender="msgPanel" immediate="true" oncomplete="closeStatusModal();" />
+			
+			<apex:pageBlockSection columns="1"
+				title="{!$Label.Select_Billing_Account}"
+				rendered="{!successInitialized}">
+				<apex:outputPanel >
+					<apex:actionRegion >
+						<apex:selectRadio layout="pageDirection" id="accTypeRadio"
+							value="{!selectedAccountType}">
+							<apex:actionSupport event="onchange" status="modalStatus"
+								action="{!onSelectAccountType}"
+								reRender="accListRadio,subscriptionSection" />
+							<apex:selectOption itemEscaped="false"
+								itemlabel="{!$Label.QUOTE_NEW_BILLING_ACCOUNT}" itemValue="new"
+								id="new_billingaccount" />
+							<apex:selectOption itemEscaped="false"
+								itemLabel="{!$Label.QUOTE_EXISTING_BILLING_ACCOUNT}"
+								itemValue="existing"
+								itemDisabled="{!billingAccountColumns.size == 0}"
+								id="existing_billingaccount"></apex:selectOption>
+						</apex:selectRadio>
+					</apex:actionRegion>
+					<div style="margin-left: 25px">
+						<apex:outputPanel id="accListRadio"
+							styleClass="listComponentPanel">
+							<apex:actionRegion >
+								<apex:dataTable value="{!billingAccounts}" var="account"
+									border="1" align="left" cellpadding="1" cellspacing="1"
+									styleClass="innerTable bPageBlock"
+									rendered="{!selectedAccountType == 'existing' && billingAccounts.size > 0 }">
+									<apex:column style="text-align:center">
+										<apex:outputPanel layout="inline"
+											rendered="{!IF(selectedAccountId = account['Id'], true, false)}">
+											<input type="radio" name="accountId" value="{!account['Id']}"
+												onclick="AF_onSelectAccount('{!account['Id']}')"
+												checked="checked" />
+										</apex:outputPanel>
+										<apex:outputPanel layout="inline"
+											rendered="{!IF(selectedAccountId != account['Id'], true, false)}">
+											<input type="radio" name="accountId" value="{!account['Id']}"
+												onclick="AF_onSelectAccount('{!account['Id']}')" />
+										</apex:outputPanel>
+									</apex:column>
+									<apex:repeat value="{!billingAccountColumns}"
+										var="billingAccountColumn">
+										<apex:column >
+											<apex:facet name="header">
+												<apex:outputText value="{!billingAccountColumn.label}" />
+											</apex:facet>
+											<apex:outputText value="{!account[billingAccountColumn.name]}" />
+										</apex:column>
+									</apex:repeat>
+								</apex:dataTable>
+							</apex:actionRegion>
+						</apex:outputPanel>
+					</div>
+				</apex:outputPanel>
+			</apex:pageBlockSection>
+
+			<apex:pageBlockSection title="{!$Label.Choose_Quote_Type}"
+				columns="1" id="subscriptionSection"
+				rendered="{!successInitialized}">
+				<apex:actionRegion >
+					<apex:selectRadio layout="pageDirection" id="subTypeRadio"
+						value="{!selectedSubscriptionType}"
+						onchange="AF_onSelectSubscriptionType();">
+
+						<apex:selectOption itemEscaped="false"
+							itemLabel="{!$Label.QUOTE_NEW_SUBSCRIPTION_FOR_THIS_ACCOUNT}"
+							itemValue="new">
+						</apex:selectOption>
+						<apex:selectOption itemEscaped="false"
+							itemLabel="{!$Label.QUOTE_AMEND_THIS_SUBSCRIPTION}"
+							itemValue="amend" rendered="{!selectedAccountType == 'existing'}"></apex:selectOption>
+						<apex:selectOption itemEscaped="false"
+							itemLabel="{!$Label.QUOTE_RENEW_THIS_SUBSCRIPTION}"
+							itemValue="renew" rendered="{!selectedAccountType == 'existing'}"></apex:selectOption>
+						<apex:selectOption itemEscaped="false"
+							itemLabel="{!$Label.QUOTE_CANCEL_THIS_SUBSCRIPTION}"
+							itemValue="cancel"
+							rendered="{!selectedAccountType == 'existing'}"></apex:selectOption>
+					</apex:selectRadio>
+				</apex:actionRegion>
+				<apex:outputPanel id="existingSubscriptionOptions"
+					styleClass="listComponentPanel">
+					<div style="margin-left: 25px">
+						<apex:actionRegion >
+							<apex:dataTable value="{!subscriptions}" var="subscription"
+								styleClass="innerTable bPageBlock" border="1" align="left"
+								rendered="{!selectedSubscriptionType != 'new' && subscriptions != null && subscriptions.size > 0 }"
+								cellpadding="1" cellspacing="1">
+								<apex:column style="text-align:center">
+									<apex:outputPanel layout="inline"
+										rendered="{!IF(selectedSubscriptionId = subscription['Id'], true, false)}">
+										<input type="radio" name="subscriptionId"
+											value="{!subscription['Id']}"
+											onclick="AF_onSelectSubscription('{!subscription['Id']}')"
+											checked="checked" />
+									</apex:outputPanel>
+									<apex:outputPanel layout="inline"
+										rendered="{!IF(selectedSubscriptionId != subscription['Id'], true, false)}">
+										<input type="radio" name="subscriptionId"
+											value="{!subscription['Id']}"
+											onclick="AF_onSelectSubscription('{!subscription['Id']}')" />
+									</apex:outputPanel>
+								</apex:column>
+								<apex:repeat value="{!subscriptionColumns}"
+									var="subscriptionColumn">
+									<apex:column >
+										<apex:facet name="header">
+											<apex:outputText value="{!subscriptionColumn.label}" />
+										</apex:facet>
+										<apex:outputText value="{!subscription[subscriptionColumn.name]}" />
+									</apex:column>
+								</apex:repeat>
+							</apex:dataTable>
+						</apex:actionRegion>
+
+					</div>
+				</apex:outputPanel>
+			</apex:pageBlockSection>
+
+			<apex:pageBlockButtons location="bottom"
+				rendered="{!successInitialized}">
+				<apex:commandButton value="{!BackButtonText}" action="{!onBack}" disabled="{!backButtonDisabled}"/>
+				<apex:commandButton value="{!NextButtonText}" action="{!createQuote}" />
+				<apex:commandButton value="{!$Label.BUTTON_CANCEL}"
+					action="{!onCancel}" rerender="notification" />
+			</apex:pageBlockButtons>
+		</apex:pageBlock>
+		<apex:actionFunction name="AF_onSelectAccount" status="modalStatus"
+			action="{!onSelectAccount}" reRender="subscriptionSection,msgPanel">
+			<apex:param assignTo="{!selectedAccountId}"
+				name="selectAccountIdParam" value=""></apex:param>
+		</apex:actionFunction>
+		<apex:actionFunction name="AF_onSelectSubscription"
+			status="modalStatus" action="{!onSelectSubscription}"
+			reRender="amendmentTypes">
+			<apex:param assignTo="{!selectedSubscriptionId}"
+				name="selectSubscriptionIdParam" value=""></apex:param>
+		</apex:actionFunction>
+		<apex:actionFunction name="AF_onSelectSubscriptionType"
+			status="modalStatus" action="{!onSelectSubscriptionType}"
+			reRender="existingSubscriptionOptions,msgPanel" />
+		<apex:actionStatus id="modalStatus" onstart="displayStatusModal();"
+			onstop="closeStatusModal();" />
+	</apex:form>
+</apex:component>

@@ -1,0 +1,13 @@
+<apex:page controller="TestOrderEntryMockupController" tabStyle="Case">
+    <apex:form >
+    <apex:sectionHeader title="Enter Customer Information"/>
+        <apex:pageBlock >
+            <apex:pageBlockSection columns="2" title="Basic Information">
+                <apex:inputField value="{!c.AccountId}"/>
+                <apex:inputField value="{!c.ContactId}" label="Sold To"/>
+                <apex:pageBlockSectionItem ></apex:pageBlockSectionItem>
+                <apex:inputField value="{!c.ParentId}"/>
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

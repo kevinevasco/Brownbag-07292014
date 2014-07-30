@@ -1,0 +1,90 @@
+<apex:page sidebar="false" title="{!$Label.CONFIG_OPTIONS}">
+
+    <c:PageTitle title="{!$Label.CONFIG_OPTIONS}" subTitle="" />
+
+    <style>
+.depart_block {
+    background-color: #F8F8F8;
+    float: left;
+    margin-bottom: 20px;
+    margin-right: 20px;
+    width: 300px;
+    height: 120px;
+    border-top: 3px solid #5E82A3;
+    border-bottom: 1px solid #EAEAEA;
+    border-left: 1px solid #EAEAEA;
+    border-radius: 4px 4px 4px 4px;
+    border-right: 1px solid #EAEAEA;
+}
+
+.panel_title {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    display: block;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.panel_subtitle {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-left: 10px;
+    display: block;
+    font-size: 12px;
+}
+
+.depart_block a {
+    text-decoration: none;
+}
+</style>
+
+    <apex:outputPanel styleClass="depart_block">
+        <apex:outputLink styleClass="panel_title" value="/apex/ConnectionSettings">
+            {!$Label.CONFIG_CONNECTION_TITLE}</apex:outputLink>
+        <apex:outputText styleClass="panel_subtitle"
+            value="{!$Label.CONFIG_CONNECTION_SUBTITLE}" />
+    </apex:outputPanel>
+
+    <apex:outputPanel styleClass="depart_block">
+        <apex:outputLink styleClass="panel_title" value="/apex/ConfigSettings">
+            {!$Label.CONFIG_QUOTE_TITLE}</apex:outputLink>
+        <apex:outputText styleClass="panel_subtitle"
+            value="{!$Label.CONFIG_QUOTE_SUBTITLE}" />
+    </apex:outputPanel>
+
+    <apex:outputPanel styleClass="depart_block">
+        <apex:outputLink styleClass="panel_title" value="/apex/DefaultValueSettings">
+            {!$Label.CONFIG_DEFAULT_VALUES}</apex:outputLink>
+        <apex:outputText styleClass="panel_subtitle"
+            value="{!$Label.CONFIG_DEFAULT_VALUES_SUBTITLE}" />
+    </apex:outputPanel>
+
+    <apex:outputPanel styleClass="depart_block">
+        <apex:outputLink styleClass="panel_title" value="/apex/QuoteTemplates">
+            {!$Label.CONFIG_QUOTE_TEMPLATE_TITLE}</apex:outputLink>
+        <apex:outputText styleClass="panel_subtitle"
+            value="{!$Label.CONFIG_QUOTE_TEMPLATE_SUBTITLE}" />
+    </apex:outputPanel>
+    
+    <apex:outputPanel styleClass="depart_block">
+        <apex:outputLink styleClass="panel_title" value="/apex/ConfigHPM">
+            {!$Label.CONFIG_HPM_TITL}</apex:outputLink>
+        <apex:outputText styleClass="panel_subtitle"
+            value="{!$Label.CONFIG_HPM_SUBTITLE}" />
+    </apex:outputPanel>
+    
+    <apex:outputPanel styleClass="depart_block">
+        <apex:outputLink styleClass="panel_title" value="/apex/FieldSetConfig">
+            {!$Label.CONFIG_VIEW_SETTINGS}</apex:outputLink>
+        <apex:outputText styleClass="panel_subtitle"
+            value="{!$Label.CONFIG_VIEW_SETTINGS_SUBTITLE}" />
+    </apex:outputPanel>
+    
+    <apex:outputPanel styleClass="depart_block">
+        <apex:outputLink styleClass="panel_title" value="/apex/QuoteWizardConfig">
+            {!$Label.CONFIG_QUOTE_WIZARD_TITLE}</apex:outputLink>
+        <apex:outputText styleClass="panel_subtitle"
+            value="{!$Label.CONFIG_QUOTE_WIZARD_SUBTITLE}" />
+    </apex:outputPanel>
+</apex:page>

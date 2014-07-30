@@ -1,0 +1,5 @@
+<apex:page standardController="zqu__Quote__c" extensions="xTestEBM_sendToZBilling">
+    <apex:form >
+        <apex:commandButton value="sendToZBilling" action="{!sendToZBilling}"/>
+    </apex:form>
+</apex:page>

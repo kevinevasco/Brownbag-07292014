@@ -1,0 +1,2 @@
+<apex:page standardController="Case" extensions="TestCaseRedirectController" action="{!redirect}">  
+</apex:page>

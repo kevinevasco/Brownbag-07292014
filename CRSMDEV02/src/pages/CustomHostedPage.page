@@ -1,0 +1,14 @@
+<apex:page controller="CustomHpmController" sidebar="true" showHeader="true" tabStyle="zqu__Quote__c">       
+
+   <script>function callbacksuccess(pmid, displayMessage) {
+   
+         window.location = "{!$Page.zqu__PaymentMethodConfirm}?pmid=" + pmid + '&id=' + '{!$CurrentPage.parameters.id}' + '&displayMessage=' + displayMessage; 
+      }       
+      
+   </script>       
+
+   <apex:sectionHeader title="Case" subtitle="Change of Credit Card Details" />       
+
+   <zqu:HostedPage injectedController="{!thisController}" includeButtonBar="false" hostedPageSettingName="Zuora HPM Setting" />
+
+</apex:page>

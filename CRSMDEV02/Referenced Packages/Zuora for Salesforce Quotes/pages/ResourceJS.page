@@ -1,0 +1,22 @@
+<apex:page contentType="text/javascript" showHeader="false" sidebar="false" controller="zqu.ResourceJSController" standardStylesheets="false" >
+
+<!-- Resource file used in javascript -->
+Resource = {};
+Resource.close = "{!URLFOR($Resource.ImagesAndJavascriptZip, '/images/close.gif')}";
+Resource.iconEditMode = "{!URLFOR($Resource.ImagesAndJavascriptZip, '/images/iconEditMode.png')}";
+Resource.open = "{!URLFOR($Resource.ImagesAndJavascriptZip, '/images/open.gif')}";
+
+<!-- Custom label used in javascript -->
+Label = {};
+Label.BILLING_PERIODS = "{!JSENCODE($Label.BILLING_PERIODS)}";
+Label.BUTTON_EDIT = "{!JSENCODE($Label.BUTTON_EDIT)}";
+Label.CHARGE_MODEL_DISCOUNT_FIXEDAMOUNT_DESC = "{!JSENCODE($Label.CHARGE_MODEL_DISCOUNT_FIXEDAMOUNT_DESC)}";
+Label.CHARGE_MODEL_DISCOUNT_PERCENT_DESC = "{!JSENCODE($Label.CHARGE_MODEL_DISCOUNT_PERCENT_DESC)}";
+Label.END_OF_TERM = "{!JSENCODE($Label.END_OF_TERM)}";
+Label.Tiers_Has_Custom_Tiers = "{!JSENCODE($Label.Tiers_Has_Custom_Tiers)}";
+Label.SELECT_PRODUCT_WARNING_SAVE_FIRST = "{!JSENCODE($Label.SELECT_PRODUCT_WARNING_SAVE_FIRST)}";
+Label.WARNING = "{!JSENCODE($Label.Warning)}";
+
+ZConfig = {};
+ZConfig.isDiscountDisabled = {!isDiscountDisabled};
+</apex:page>

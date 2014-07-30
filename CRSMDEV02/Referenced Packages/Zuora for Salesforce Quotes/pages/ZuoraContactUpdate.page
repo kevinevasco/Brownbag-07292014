@@ -1,0 +1,62 @@
+<apex:page standardController="zqu__Quote__c" extensions="zqu.ZuoraContactUpdateController" action="{!onload}">
+	<c:StatusModal /> 
+	<apex:form >
+		<apex:sectionHeader title="{!$Label.ACCOUNT_DETAILS}" subtitle="{!$Label.ACCOUNT_DETAIL_SUBTITLE}" id="updateContactTitle">
+    	<apex:commandButton style="margin-bottom: 5px;" value="{!$Label.BUTTON_BACK}" action="{!goBack}" />
+		</apex:sectionHeader> 
+	  <apex:outputPanel id="rerenderArea">
+      <c:Notification successTitle="Success" failureTitle="Failure"/> 
+    </apex:outputPanel>     
+	  <apex:outputPanel id="billtodetail">                
+	      <apex:pageBlock title="{!$Label.ACCOUNT_BILL_TO_CONTACT}" >
+	          <apex:actionStatus startText="" stopText="" id="updatebilltostatus" onstart="javascript:displayStatusModal();" onstop="javascript:closeStatusModal();"/>
+	          <apex:pageBlockButtons location="top">
+	              <apex:commandButton value="{!$Label.AMENDMENT_PREVIEW_UPDATE_ZUORA_DATA}" status="updatebilltostatus" action="{!updatebillto}" reRender="billtodetail,soldtodetail,rerenderArea" rendered="{!showBillToUpdate}"/>
+	              <apex:commandButton value="{!$Label.QUOTE_SUBMIT_EDIT_SF_CONTACT}"  action="{!editbilltocontact}" rendered="{!showBillToUpdate}"/>
+	          </apex:pageBlockButtons>                    
+	          <c:contactdetail cdisplay="{!billtocontact}" showupdate="{!showBillToUpdate}" >                        
+	          </c:contactdetail>
+	      </apex:pageBlock>
+	  </apex:outputPanel>
+	  <apex:outputPanel id="soldtodetail">
+	      <apex:pageBlock title="{!$Label.ACCOUNT_SOLD_TO_CONTACT}">
+	          <apex:actionStatus startText="" stopText="" id="updatesoldtostatus" onstart="javascript:displayStatusModal();" onstop="javascript:closeStatusModal();"/>
+	          <apex:pageBlockButtons location="top">
+	              <apex:commandButton value="{!$Label.AMENDMENT_PREVIEW_UPDATE_ZUORA_DATA}" status="updatesoldtostatus" action="{!updatesoldto}" reRender="billtodetail,soldtodetail,rerenderArea" rendered="{!showSoldToUpdate}"/>
+	              <apex:commandButton value="{!$Label.QUOTE_SUBMIT_EDIT_SF_CONTACT}"  action="{!editsoldtocontact}" rendered="{!showSoldToUpdate}"/>
+	          </apex:pageBlockButtons> 
+	          <c:contactdetail cdisplay="{!soldtocontact}" showupdate="{!showSoldToUpdate}" >                   
+	          </c:contactdetail>
+	      </apex:pageBlock>
+	  </apex:outputPanel>
+	  <apex:outputPanel id="accountDetail">
+	  	<apex:pageBlock title="Account Detail">
+	  		<apex:actionStatus startText="" stopText="" id="updateaccounttostatus" onstart="javascript:displayStatusModal();" onstop="javascript:closeStatusModal();"/>
+	      <apex:pageBlockButtons location="top" rendered="{!zqconfig.zqu__Allow_Updating_Zuora_Account_Info__c}">
+	        <apex:commandButton status="updateaccounttostatus" value="{!$Label.UPDATE_PAYMENT_TERM}" action="{!updatePaymentTerm}" reRender="billtodetail,soldtodetail,rerenderArea, accountDetail" rendered="{!showPaymentTermUpdateButton}"/>
+	        <apex:commandButton status="updateaccounttostatus" value="{!$Label.UPDATE_PAYMENT_METHOD}"  action="{!updatePaymentMethod}" reRender="billtodetail,soldtodetail,rerenderArea, accountDetail" rendered="{!showPaymentMethodUpdateButton}"/>
+	      </apex:pageBlockButtons> 
+	  		<apex:pageBlockSection columns="2" >
+            <apex:pageBlockSectionItem >
+            	<apex:outputLabel >{!$ObjectType.zqu__Quote__c.fields.zqu__PaymentTerm__c.Label}</apex:outputLabel> 
+              <apex:panelGrid >
+                <apex:panelGroup layout="block" style="width:100%">
+                <apex:outputField value="{!quote.zqu__PaymentTerm__c}"/>               
+                <apex:outputText value="[{!zAccPaymentTerm}]" title="{!$Label.QUOTE_SUBMIT_UPDATE_ZUORA_DATA_MESSAGE}" styleClass="inlineEditModified" rendered="{!quote.zqu__PaymentTerm__c != zAccPaymentTerm}"/>
+              	</apex:panelGroup>
+            	</apex:panelGrid>
+            </apex:pageBlockSectionItem>
+            <apex:pageBlockSectionItem >
+              <apex:outputLabel >{!$ObjectType.zqu__Quote__c.fields.zqu__PaymentMethod__c.Label}</apex:outputLabel> 
+                <apex:panelGrid >
+                <apex:panelGroup layout="block" style="width:100%">
+                <apex:outputField value="{!quote.zqu__PaymentMethod__c}"/>
+              		<apex:outputText value="[{!zAccPaymentMethod}]" title="{!$Label.QUOTE_SUBMIT_UPDATE_ZUORA_DATA_MESSAGE}" styleClass="inlineEditModified" rendered="{!quote.zqu__PaymentMethod__c != zAccPaymentMethod}" />
+                </apex:panelGroup>
+            	</apex:panelGrid>
+            </apex:pageBlockSectionItem>
+          </apex:pageBlockSection>
+	  	</apex:pageBlock>
+		</apex:outputPanel>
+	</apex:form>
+</apex:page>
